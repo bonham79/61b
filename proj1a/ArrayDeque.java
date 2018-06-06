@@ -3,30 +3,37 @@ public class ArrayDeque<Type> {
     private Type[] items;
     private int firstNext;
     private int lastNext;
+    private int first;
+    private int last;
 
     public ArrayDeque() {
         items = (Type[]) new Object[8];
         size = 0;
 
-        firstNext = 3;
+        first = 4;
+        last = first;
+
+        firstNext = 4;
         lastNext = 4;
     }
 
-    private Sentinel() {
-        int first = 3;
-        int last = 4;
+    private void resize(int factor) {
+        Type[] newArray = (Type[]) new Object[Math.round(size*factor)];
+        System.arraycopy(items, first, newArray, newArray.length/2 - items.length + first, items.length - first);
+        System.arraycopy(items, 0, newArray, newArray.length/2, first);
+
+        first = newArray.length/2 - items.length + first;
+        firstNext = first - 1;
+        last = first + size -1;
+        lastNext = last + 1;
+        items = newArray;
     }
 
-    private void resize(double factor) {
-        //Type[] newDeque = (Type[]) new Object[size*factor];
-        //System.arraycopy(items, , newDeque , , );
-    }
-
-    private boolean resizeCheck() {
-        return false;
-    }
 
 	public void addFirst(Type item) {
+        if (size == 0) {
+            lastNext = last + 1;
+        }
         items[firstNext] = item;
         first = firstNext;
         --firstNext;
@@ -34,10 +41,15 @@ public class ArrayDeque<Type> {
         if (firstNext == -1) {
             firstNext = items.length - 1;
         }
-        if (resizeCheck()) {resize(5);}
+        if (size == items.length) {
+            resize(10);
+        }
     }
 
     public void addLast(Type item) {
+        if (size == 0) {
+            firstNext = first - 1;
+        }
         items[lastNext] = item;
         last = lastNext;
         ++lastNext;
@@ -45,7 +57,9 @@ public class ArrayDeque<Type> {
         if (lastNext == items.length) {
             lastNext = 0;
         }
-        if (resizeCheck()) {resize(5);}
+        if (size == items.length) {
+            resize(10);
+        }
     }
 
     public boolean isEmpty() {
@@ -106,13 +120,11 @@ public class ArrayDeque<Type> {
 
     public static void main(String[] args) {
         ArrayDeque x = new ArrayDeque();
-        for (int i = 0; i < 8; ++i) {
+        for (int i = 0; i < 2000000; ++i) {
+            x.addFirst(i);
             x.addLast(i);
         }
-        x.printDeque();
-        int holder = x.size;
-        for (int i = 0; i < holder; ++i) {
-            System.out.println(x.removeFirst());
-        }
+        x.addLast("something");
+        x.addFirst("another");
     }
 }
