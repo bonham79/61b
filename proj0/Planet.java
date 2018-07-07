@@ -38,13 +38,7 @@ public class Planet {
 	public double calcForceExertedByX(Planet Q) {
 		/**Calculates horizontal force exerted on object 
 		calling method by Planet Q */
-		double xxDist;
-		if (this.xxPos > Q.xxPos) {
-			xxDist = this.xxPos - Q.xxPos;
-		} else {
-			xxDist = Q.xxPos - this.xxPos;
-		}
-		return this.calcForceExertedBy(Q) * xxDist / this.calcDistance(Q);
+		return this.calcForceExertedBy(Q) * (Q.xxPos - this.xxPos) / this.calcDistance(Q);
 	}
 
 	public double calcForceExertedByY(Planet Q) {
@@ -56,7 +50,7 @@ public class Planet {
 		} else {
 			yyDist = Q.yyPos - this.yyPos;
 		}
-		return this.calcForceExertedBy(Q) * yyDist / this.calcDistance(Q);
+		return this.calcForceExertedBy(Q) * (Q.yyPos -this.yyPos) / this.calcDistance(Q);
 	}
 
 	public double calcNetForceExertedByX(Planet[] planets) {
@@ -83,5 +77,18 @@ public class Planet {
 			yyNet += this.calcForceExertedByY(p);
 		}
 		return yyNet;
+	}
+
+	public void update(double dt, double fX, double fY) {
+		double aXX = fX/this.mass;
+		double aYY = fY/this.mass;
+		this.xxVel = aXX * dt + this.xxVel;
+		this.yyVel = aYY * dt + this.yyVel;
+		this.xxPos = this.xxPos + dt * this.xxVel;
+		this.yyPos = this.yyPos + dt * this.yyVel; 
+	}
+
+	public void draw() {
+		StdDraw.picture(this.xxPos, this.yyPos, "images/" + this.imgFileName);
 	}
 }

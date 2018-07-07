@@ -31,6 +31,7 @@ public class NBody {
 	}
 
 	public static void main(String[] args){
+		
 		/**Initializes variables*/
 		double T = Double.parseDouble(args[0]);
 		double dt = Double.parseDouble(args[1]);
@@ -39,7 +40,6 @@ public class NBody {
 		double radius = readRadius(filename);
 		/**Actual drawing*/
 		StdDraw.enableDoubleBuffering();
-
 		StdDraw.clear();
 		StdDraw.setScale(-radius, radius);
 		StdDraw.picture(0, 0, "images/starfield.jpg");
@@ -55,11 +55,9 @@ public class NBody {
 			for (int index = 0; index < planets.length; index +=1) {
 				xForces[index] = planets[index].calcNetForceExertedByX(planets);
 				yForces[index] = planets[index].calcNetForceExertedByY(planets);
-				System.out.println("Net forces" + planets[index].imgFileName);
 			}
 			for (int index = 0; index < planets.length; index +=1) {
 				planets[index].update(dt, xForces[index], yForces[index]);
-				System.out.println("Forces Calculated" + planets[index].imgFileName);
 			}
 
 			StdDraw.picture(0, 0, "images/starfield.jpg");
@@ -68,6 +66,8 @@ public class NBody {
 			}
 			StdDraw.show();
 			StdDraw.pause(1);
+
+		//Data dump//
 		}
 		
 		StdOut.printf("%d\n", planets.length);
