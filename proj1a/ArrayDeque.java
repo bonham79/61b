@@ -28,7 +28,7 @@ public class ArrayDeque<Type> {
             //Determines if size of deque has met limits of array size
             //Calls for a resize of array
             //Default factor of 3
-            resizeIncr(3);
+            resizeIncr(10);
         } else {
             //Determines if deque is too small for array and resizes to conserve memory (only tracked for length>16).
             //Default factor of 2.
