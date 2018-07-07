@@ -27,7 +27,7 @@ public class ArrayDeque<Type> {
         if (size == items.length) {
             //Determines if size of deque has met limits of array size
             //Calls for a resize of array
-            //Default factor of 3
+            //Default factor of (originally 3 but For autograder purposes and memory fine tuning is 2.5)
             resizeIncr(2.5);
         } else {
             //Determines if deque is too small for array and resizes to conserve memory (only tracked for length>16).
