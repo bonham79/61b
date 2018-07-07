@@ -1,6 +1,6 @@
 public class Planet {
 	public double xxPos, yyPos, xxVel, yyVel, mass;
-	private String imgFileName;
+	public String imgFileName;
 
 	public Planet(double xxPos, double yyPos, double xxVel, double yyVel, double mass, String imgFileName) {
 		/**Initializes a Planet class */
@@ -90,9 +90,5 @@ public class Planet {
 
 	public void draw() {
 		StdDraw.picture(this.xxPos, this.yyPos, "images/" + this.imgFileName);
-	}
-
-	public String imgFileName(){
-		return this.imgFileName;
 	}
 }
