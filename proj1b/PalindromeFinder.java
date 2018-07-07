@@ -2,7 +2,7 @@
 public class PalindromeFinder {
 
     public static void main(String[] args) {
-        CharacterComparator y = new OffByN(Integer.parseInt(args[0]));
+        CharacterComparator y = new OffByN(2);
         int minLength = 4;
         In in = new In("../library-sp18/data/words.txt");
         Palindrome palindrome = new Palindrome();

@@ -1,10 +1,15 @@
+import java.util.Objects;
 
 public class ArrayDeque<Type> {
 
     private int size;
     private Type[] items;
+
+    //Variables to signal position of next insert at beginning or end of deque.
     private int firstNext;
     private int lastNext;
+
+    //Variables to track beginning and end of Deque
     private int first;
     private int last;
 
@@ -12,12 +17,8 @@ public class ArrayDeque<Type> {
         //Initializes empty Deque within array of size 8
         items = (Type[]) new Object[8];
         size = 0;
-        //Variables to track beginning and end of Deque
-        first = 4;
-        last = first;
-        //Variables to signal position of next insert at beginning or end of deque.
-        firstNext = 4;
-        lastNext = 4;
+        firstNext = items.length / 2;
+        lastNext = firstNext;
     }
 
     private void resizeChecker() {
@@ -142,11 +143,21 @@ public class ArrayDeque<Type> {
         items = newArray;
     }
 
-    private void zeroDequeCheck() {
+    private void emptyDequeCheck() {
         if (size == 0) {
             //Resets pointers in deque when size == 0 to offset moving pointers from addFirst and addLast.
             first = last = lastNext = firstNext = items.length/2;
         }
+    }
+
+    private void firstItemDeque(Type item) {
+    	//Assigns values for creation of Deque of size = 1; (Largely exists to clean up code an remove redundancies)
+    	//in terms of designating pointers from switch from empty array. 
+    	items[items.length / 2] = item;
+    	first = last = items.length / 2;
+    	firstNext = --first;
+    	lastNext = ++last;
+    	++size;
     }
 
 
@@ -154,7 +165,8 @@ public class ArrayDeque<Type> {
         //Adds item to nextFirst position in Array then updates first and nextFirst accordingly.
         //Then checks if array needs to be resized.
         if (size == 0) {
-            lastNext = last + 1;
+            firstItemDeque(item);
+            return;
         }
         items[firstNext] = item;
         first = firstNext;
@@ -168,9 +180,10 @@ public class ArrayDeque<Type> {
 
     public void addLast(Type item) {
         //Adds item to nextLast position in Deque then updates last and nextLast accordingly
-        //Then checks if deque must be resized.
+        //Then checks if deque needs to be resized.
         if (size == 0) {
-            firstNext = first - 1;
+            firstItemDeque(item);
+            return;
         }
         items[lastNext] = item;
         last = lastNext;
@@ -211,7 +224,7 @@ public class ArrayDeque<Type> {
             first = 0;
         }
         --size;
-        zeroDequeCheck();
+        emptyDequeCheck();
         resizeChecker();
         return orig;
     }
@@ -230,7 +243,7 @@ public class ArrayDeque<Type> {
             last = items.length - 1;
         }
         --size;
-        zeroDequeCheck();
+        emptyDequeCheck();
         resizeChecker();
         return orig;
     }

@@ -32,10 +32,10 @@ public class LeapYear {
 
     public static boolean isLeapYear(int year){
     	/**Boolean value: returns True if int value is a Leap year.  Else: returns False */
-    	if (year%400 == 0) {
+    	if (year % 400 == 0) {
     		return true;
     	} 
-    	if (year % 4 == 0 AND year % 100 != 0) {
+    	if ((year % 4 == 0) && (year % 100 != 0)) {
     		return true;
     	}
     	return false;
