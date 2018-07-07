@@ -28,7 +28,7 @@ public class ArrayDeque<Type> {
             //Determines if size of deque has met limits of array size
             //Calls for a resize of array
             //Default factor of 3
-            resizeIncr(10);
+            resizeIncr(3);
         } else {
             //Determines if deque is too small for array and resizes to conserve memory (only tracked for length>16).
             //Default factor of 2.
@@ -155,8 +155,8 @@ public class ArrayDeque<Type> {
     	//in terms of designating pointers from switch from empty array. 
     	items[items.length / 2] = item;
     	first = last = items.length / 2;
-    	firstNext = --first;
-    	lastNext = ++last;
+    	firstNext = first - 1;
+    	lastNext = last + 1;
     	++size;
     }
 
@@ -257,5 +257,13 @@ public class ArrayDeque<Type> {
             kIndex -= items.length;
         }
         return items[kIndex];
+    }
+
+    public static void main(String[] args) {
+        ArrayDeque x = new ArrayDeque();
+        for (int i = 0; i < 205; ++i) {
+            x.addLast(i);
+        }
+        x.get(0);
     }
 }
