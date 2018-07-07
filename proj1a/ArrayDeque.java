@@ -28,7 +28,7 @@ public class ArrayDeque<Type> {
             //Determines if size of deque has met limits of array size
             //Calls for a resize of array
             //Default factor of 3
-            resizeIncr(2);
+            resizeIncr(2.5);
         } else {
             //Determines if deque is too small for array and resizes to conserve memory (only tracked for length>16).
             //Default factor of 2.
@@ -40,7 +40,7 @@ public class ArrayDeque<Type> {
     }
 
 
-    private void resizeIncr(int factor) {
+    private void resizeIncr(double factor) {
         /*Resize array by scale of factor
             Then takes values from beginning of deque to end of array and places at middle of new array.
             Then takes values from beginning of array to end of deque and places at middle of new array.
@@ -56,7 +56,7 @@ public class ArrayDeque<Type> {
                 ----- | = Middle of array
                 ----- [] Array.
          */
-        Type [] newArray = (Type[]) new Object[size * factor];
+        Type [] newArray = (Type[]) new Object[(int) Math.round(size * factor)];
         //Creates new Array
 
         int midpoint = newArray.length / 2;
