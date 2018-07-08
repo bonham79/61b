@@ -26,6 +26,9 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         first = last = this.fillCount = 0;
     }
 
+
+    ///Adds Iterator Class
+
     /**
      * Adds x to the end of the ring buffer. If there is no room, then
      * throw new RuntimeException("Ring buffer overflow"). Exceptions
@@ -34,6 +37,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     @Override
     public void enqueue(T x) {
         // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
+        if (this.fillCount == this.capacity){throw new RuntimeException("Ring Buffer Overflow");}
         rb[last] = x;
         if (this.fillCount == 0) {
             first = last;
@@ -53,6 +57,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     @Override
     public T dequeue() {
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and update
+        if (this.fillCount == 0){throw new RuntimeException("Ring Buffer Underflow");}
         T item = rb[first];
         ++first;
         if (first == this.capacity) {
@@ -72,4 +77,36 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
+
+    private class RBIterator implements Iterator<T> {
+        private int count;
+        private int index;
+        public RBIterator() {index = first; count = 0;}
+
+        @Override
+        public T next(){
+            T next = rb[index];
+            ++count;
+            ++index;
+            if (index == capacity){index = 0;}
+            return next;
+        }
+
+        @Override
+        public boolean hasNext(){return count != fillCount;}
+    }
+
+    @Override
+    public Iterator<T> iterator(){return new RBIterator();}
+
+
+    public static void main(String[] args) {
+        ArrayRingBuffer x = new ArrayRingBuffer(5);
+        x.enqueue(5);
+        x.enqueue(65);
+        x.enqueue(23);
+        for (Object element : x) {
+            System.out.println(element);
+        }
+    }
 }
