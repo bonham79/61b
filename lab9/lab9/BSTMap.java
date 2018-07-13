@@ -107,10 +107,10 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public V remove(K key) {
-        return removeHelper(key, null, this.root);
+        return removeHelper(key, this.root);
     }
 
-    private V removeHelper(K key, Node p, Node c) {//p = parent, c = child
+    private V removeHelper(K key, Node c) {
         if (c == null) {return null;}
 
         int comp = c.key.compareTo(key); //Just so we don't type the same function 20 times
@@ -122,14 +122,14 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             --size;//takes care of size
             c = null;//deletes value
 
-            graft(leftBranch, p); //Adds the old trees connected to c onto the parent.
-            graft(rightBranch, p);
+            graft(leftBranch, this.root); //Adds the old trees connected to c onto the parent.
+            graft(rightBranch, this.root);
 
             return returnValue;
         } //p has our key
 
-        if (comp > 0) {return removeHelper(key, c, c.left);} //left
-        return removeHelper(key, c, c.right);//right
+        if (comp > 0) {return removeHelper(key, c.left);} //left
+        return removeHelper(key, c.right);//right
     }
 
     private void graft(Node branch, Node root) {//connects root node of branch with the root or one of its subsidiaries
