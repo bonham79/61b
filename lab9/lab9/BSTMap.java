@@ -107,38 +107,61 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public V remove(K key) {
-        return removeHelper(key, this.root);
+        return removeHelper(key, this.root, null, 0);
     }
 
-    private V removeHelper(K key, Node c) {
-        if (c == null) {return null;}
+    private V removeHelper(K key, Node c, Node p, int direction) {//c for child, p for parent,
+        // negative or positive direction for left/right respectively or 0 to indicate beginning
+        if (c == null) {return null;}//value not found
 
-        int comp = c.key.compareTo(key); //Just so we don't type the same function 20 times
-
-        if (comp == 0) {//found value
+        int comp = c.key.compareTo(key);
+        if (comp == 0){//Found key
             V returnValue = c.value;
-            Node leftBranch = c.left;
-            Node rightBranch = c.right;
-            --size;//takes care of size
-            c = null;//deletes value
+            Node left = c.left;
+            Node right = c.right;
+            --size;
+            if (p == null){//indicating we're at the root node
+                this.root = left; //arbitrary choice
+                graft(right, this.root);//adds the other branch onto the left branch;
+                return returnValue;
+            }
 
-            graft(leftBranch, this.root); //Adds the old trees connected to c onto the parent.
-            graft(rightBranch, this.root);
+            //removes node from within tree
+            if (direction < 0) { p.left = null; } //went left
+            if (direction > 0) { p.right = null; }//went right
 
+            //Adds back on the lower nodes, if they exist;
+            graft(left, this.root);
+            graft(right, this.root);
             return returnValue;
-        } //p has our key
+        }
 
-        if (comp > 0) {return removeHelper(key, c.left);} //left
-        return removeHelper(key, c.right);//right
+        //Recursive calls.  Left, then right;
+        if (comp < 0){return removeHelper(key, c.right, c, 1);}
+        return removeHelper(key, c.left, c, -1);
+
     }
 
     private void graft(Node branch, Node root) {//connects root node of branch with the root or one of its subsidiaries
-        if (branch == null) {return;}
-        if (root == null) {root = branch;}
+        if (branch == null) {
+            return;
+        }
 
         int comp = root.key.compareTo(branch.key);
-        if (comp > 0) {graft(branch, root.left);}
-        if (comp < 0 ) {graft(branch, root.right);}
+        if (comp > 0) {
+            if (root.left != null) {
+                graft(branch, root.left);
+            } else {
+                root.left = branch; //if it's null, we're at the end.
+            }
+        }
+        if (comp < 0) {
+            if (root.right != null) {
+                graft(branch, root.right);
+            } else {
+                root.right = branch; //as above.
+            }
+        }
     }
 
 
@@ -156,5 +179,15 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     @Override
     public Iterator<K> iterator() {
         return keySet().iterator();
+    }
+
+    public static void main(String[] args) {
+        BSTMap<String, Integer> b = new BSTMap<String, Integer>();
+        b.put("root", 23432);
+        b.put("apples", 23);
+        b.put("zebras", 343);
+        b.put("b", 3);
+        b.put("s", 3);
+        System.out.println(b.remove("apples"));
     }
 }
