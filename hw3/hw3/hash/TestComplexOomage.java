@@ -4,6 +4,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,8 @@ public class TestComplexOomage {
     public void testWithDeadlyParams() {
         List<Oomage> deadlyList = new ArrayList<>();
         // Your code here.
+        //tHE IDEA is to feed a series of parameters that forces continued powers of 256
+        //Which means we just need a 1, followed by a series of 0's.
         List<Integer> params1 = new ArrayList<>();
         params1.add(1);//hash = 1;
         params1.add(0);//hash = 256;
@@ -68,9 +71,16 @@ public class TestComplexOomage {
         params3.add(0);
         ComplexOomage s3 = new ComplexOomage(params3);
 
+        ArrayList param4 = new ArrayList();
+        param4.add(0);
+        ComplexOomage s4 = new ComplexOomage(param4);
+
         deadlyList.add(s1);
         deadlyList.add(s2);
         deadlyList.add(s3);
+        deadlyList.add(s4);
+
+        for (int i = 0; i < 7; ++i) {deadlyList.add(ComplexOomage.randomComplexOomage());}
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
     }
 
