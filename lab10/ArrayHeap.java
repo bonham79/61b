@@ -185,7 +185,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         T min = getNode(1).item();
         swap(1, size);
         contents[size] = null;
-        sink(1);
+        if (size > 1) {sink(1);}
         --size;
         return min;
     }
