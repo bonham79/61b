@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
 import java.util.HashSet;
 
-public final class Solver {
+public class Solver {
     private MinPQ options = new MinPQ();
     private SearchNode BMS;
     //private HashSet<WorldState> marked;

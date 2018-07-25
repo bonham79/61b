@@ -1,11 +1,12 @@
 package hw4.puzzle;
 import java.util.ArrayList;
 
-public final class Board implements WorldState {
+public class Board implements WorldState {
     //Creates A board for an 8 puzzle problem (a problem that moves around an empty square
     //until are numbers are in order from left to right)
     private int[][] tiles;
     private int size;
+    private int[] zeroPos = new int[2]; //to store position of "empty"/"center" of board.
 
     public Board(int[][] setup) {
         this.size = setup.length;
@@ -14,11 +15,17 @@ public final class Board implements WorldState {
         for (int i = 0; i < this.size; ++i) {
             for (int j = 0; j < this.size; ++j) {
                 this.tiles[i][j] = setup[i][j];
+                if (setup[i][j] == 0) { //marks on board where the empty slot is.
+                                        // helps streamline neighbor constructors as we do all this at beginning. 
+                    zeroPos[0] = i;
+                    zeroPos[1] = j;
+                }
             }
         }
     }
 
     public int tileAt(int i, int j) {
+        //Returns value of tile at position i,j
         if ((i < 0) || (i >= this.size) || (j < 0) || (j >= this.size)) {
             throw new IndexOutOfBoundsException();
         }
@@ -29,27 +36,27 @@ public final class Board implements WorldState {
 
     @Override
     public Iterable<WorldState> neighbors() {
-        ArrayList nSet = new ArrayList();
-        int i0, j0, top, bot, right, left, value;
+        //Returns a list of neighbor boards
+        ArrayList neighbors = new ArrayList();
+        int  i0, j0, top, bot, right, left;
+        i0 = zeroPos[0];
+        j0 = zeroPos[1];
 
-        i0 = j0 = value = -3;
-
-
-
-            //searches through array until finding null value, then copies index location
-            //and marks values to left, right, above, and below to indicate possible neighbor location
-            for (int i = 0; i < size; ++i) {
-                for (int j = 0; j < size; ++j) {
-                    value = tileAt(i, j);
-                    if (value == 0) {
-                        i0 = i;
-                        j0 = j;
-                    }
-                }
+        /*
+        int i = 0;  //In case we want to speed up constructor
+        while (value != 0 && i < size) {
+            int j = 0;
+            while (value != 0 && j < size) {
+                value = tileAt(i, j);
+                i0 = i;
+                j0 = j;
+                ++j;
             }
+            ++i;
+        }
+        */
 
-
-        //marks adjacent locations
+        //marks adjacent locations. as board is 2D, only four options.
         top = i0 - 1;
         bot = i0 + 1;
         right = j0 + 1;
@@ -58,14 +65,13 @@ public final class Board implements WorldState {
         //Creates boards where the "empty" row is switched with all possible adjacent numbers
         //(and thus provides all possible moves as the board has only four options)
         //Non valid indexes are skipped.
-        if (top >= 0) { nSet.add(this.swap(i0, j0, top, j0)); }
-        if (bot < size) { nSet.add(this.swap(i0, j0, bot, j0)); }
-        if (left >= 0) { nSet.add(this.swap(i0, j0, i0, left)); }
-        if (right < size) { nSet.add(this.swap(i0, j0, i0, right)); }
+        if (top >= 0) { neighbors.add(this.swap(i0, j0, top, j0)); }
+        if (bot < size) { neighbors.add(this.swap(i0, j0, bot, j0)); }
+        if (left >= 0) { neighbors.add(this.swap(i0, j0, i0, left)); }
+        if (right < size) { neighbors.add(this.swap(i0, j0, i0, right)); }
 
-        return nSet;
+        return neighbors;
     }
-
 
     private Board swap(int row0, int col0, int row1, int col1) {
         //Returns board with tiles in above positions swapped.
