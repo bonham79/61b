@@ -102,15 +102,16 @@ public final class Board implements WorldState {
     }
 
     public int manhattan() {
-        //manhattan distance for each item.
+        //Iterates through board and identifies when values are not goal values
+        //Then calculates manhattan value for position and adds to total
         int count = 0;
-        int goal, value;
+        int value;
 
         for (int i = 0; i < size; ++i) {
             for (int j = 0; j < size; ++j) {
                 value = tileAt(i, j);
                 if (value != goalNumber(i, j)) { //value not what it should be.
-                    count += indivManhattan(i, j, value); //add indiv manhattan value
+                    count += indivManhattan(i, j, value); //add individual manhattan value
                 }
             }
         }
@@ -125,9 +126,10 @@ public final class Board implements WorldState {
         //Calculates individual manhattan distance
         int rowMan, colMan;
 
-        if (value == 0) {//0 should always be at end.
-            colMan = rowMan = size - 1;
+        if (value == 0) {//0 should be ignored in manhattan distance as is "empty"
+            return 0;
         } else {
+            //Looks for the position the value "should" be at.
             colMan = (value - 1) % size; //cols reflect modding function, but shifted by one.
             rowMan = (value - 1) / size; //rows reflect multiples of length.
         }
@@ -161,7 +163,7 @@ public final class Board implements WorldState {
         return true;
     }
 
-    @Override
+   @Override
     public int hashCode() {
         return this.tiles.hashCode();
     }
