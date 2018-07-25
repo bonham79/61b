@@ -1,5 +1,6 @@
 package hw4.puzzle;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Board implements WorldState {
     //Creates A board for an 8 puzzle problem (a problem that moves around an empty square
@@ -16,7 +17,7 @@ public class Board implements WorldState {
             for (int j = 0; j < this.size; ++j) {
                 this.tiles[i][j] = setup[i][j];
                 if (setup[i][j] == 0) { //marks on board where the empty slot is.
-                                        // helps streamline neighbor constructors as we do all this at beginning. 
+                                        // helps streamline neighbor constructors as we do all this at beginning.
                     zeroPos[0] = i;
                     zeroPos[1] = j;
                 }
@@ -37,13 +38,29 @@ public class Board implements WorldState {
     @Override
     public Iterable<WorldState> neighbors() {
         //Returns a list of neighbor boards
-        ArrayList neighbors = new ArrayList();
-        int  i0, j0, top, bot, right, left;
-        i0 = zeroPos[0];
-        j0 = zeroPos[1];
+        Queue neighbors = new LinkedList();
+        int  top, bot, right, left;
+        int i0 = zeroPos[0];
+        int j0 = zeroPos[1];
 
-        /*
-        int i = 0;  //In case we want to speed up constructor
+        //marks adjacent locations. as board is 2D, only four options.
+        top = i0 - 1;
+        bot = i0 + 1;
+        right = j0 + 1;
+        left = j0 - 1;
+
+        //Creates boards where the "empty" row is switched with all possible adjacent numbers
+        //(and thus provides all possible moves as the board has only four options)
+        //Non valid indexes are skipped.
+        if (top >= 0) { neighbors.add(this.zeroSwap(top, j0)); }
+        if (bot < size) { neighbors.add(this.zeroSwap(bot, j0)); }
+        if (left >= 0) { neighbors.add(this.zeroSwap(i0, left)); }
+        if (right < size) { neighbors.add(this.zeroSwap(i0, right)); }
+
+        return neighbors;
+    }
+            /* Junk code used before passing work off to constructor.
+        int i = 0;
         while (value != 0 && i < size) {
             int j = 0;
             while (value != 0 && j < size) {
@@ -56,41 +73,30 @@ public class Board implements WorldState {
         }
         */
 
-        //marks adjacent locations. as board is 2D, only four options.
-        top = i0 - 1;
-        bot = i0 + 1;
-        right = j0 + 1;
-        left = j0 - 1;
+    private Board zeroSwap(int row1, int col1) {
+        //Returns board with tiles in above positions swapped with tiles at zero position.
+        int row0 = zeroPos[0]; //for readability.  position of "empty" tile.
+        int col0 = zeroPos[1];
+        Board copy = new Board(this.tiles);  //creates duplicate of board.
+        int value1 = copy.tiles[row1][col1]; //records original value to be changed.
 
-        //Creates boards where the "empty" row is switched with all possible adjacent numbers
-        //(and thus provides all possible moves as the board has only four options)
-        //Non valid indexes are skipped.
-        if (top >= 0) { neighbors.add(this.swap(i0, j0, top, j0)); }
-        if (bot < size) { neighbors.add(this.swap(i0, j0, bot, j0)); }
-        if (left >= 0) { neighbors.add(this.swap(i0, j0, i0, left)); }
-        if (right < size) { neighbors.add(this.swap(i0, j0, i0, right)); }
+        copy.tiles[row0][col0] = value1;
+        copy.tiles[row1][col1] = 0; //we know the value as it's empty.  
+        copy.zeroPos[0] = row1; //since we're directly altering the class, we need to update zero pos.
+        copy.zeroPos[1] = col1;
 
-        return neighbors;
-    }
+        return copy;
 
-    private Board swap(int row0, int col0, int row1, int col1) {
-        //Returns board with tiles in above positions swapped.
-        // Ideally, row0, col0 is location of 0 position.
-        int[][] arrayCopy = new int [this.size][this.size];
+
+        //junk code to create new tile array instead of new board.  waste of memory and time.
+                /*int[][] arrayCopy = new int [this.size][this.size];
         for (int i = 0; i < this.size; ++i) {
             for (int j = 0; j < this.size; ++j) {
                 arrayCopy[i][j] = this.tiles[i][j];
             }
         }
-
-
-        int value0 = arrayCopy[row0][col0];
-        int value1 = arrayCopy[row1][col1];
-
         arrayCopy[row0][col0] = value1;
-        arrayCopy[row1][col1] = value0;
-
-        return new Board(arrayCopy);
+        arrayCopy[row1][col1] = value0; */
     }
 
 
