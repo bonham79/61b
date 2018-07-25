@@ -6,10 +6,10 @@ import java.util.HashSet;
 public final class Solver {
     private MinPQ options = new MinPQ();
     private SearchNode BMS;
-    private HashSet<WorldState> marked;
+    //private HashSet<WorldState> marked;
 
     public Solver (WorldState initial){
-        marked = new HashSet;
+        //marked = new HashSet<>();
         options.insert(new SearchNode(initial, 0, null));
         BMS = solve();
     }
@@ -38,12 +38,13 @@ public final class Solver {
         //Goes through all neighbors and finds shortest move distance to goal.
         while (true) {
             SearchNode bms = (SearchNode) options.delMin(); //Chooses priority
-            marked.add(bms.state);
+            //marked.add(bms.state);
             if (bms.distanceToGoal == 0) {
                 return bms;
             } else {
                 for (WorldState neighbor : bms.state.neighbors()) {
                     if (bms.prevNode == null || !neighbor.equals(bms.prevNode.state)) {
+                    //    if (!marked.contains(neighbor)) {
                         //Optimizes so does not select grandparent
                         options.insert(new SearchNode(neighbor, bms.moves + 1, bms));
                     }
