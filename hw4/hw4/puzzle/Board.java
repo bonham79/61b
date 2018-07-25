@@ -144,7 +144,7 @@ public final class Board implements WorldState {
     public boolean equals(Object y) {
         //Iterates through tiles and returns true if all tile positions are similar.
         //Cannot use arrays due to protecting variables.
-        if (!this.getClass().equals(y.getClass())){
+        if ((y == null) || (!this.getClass().equals(y.getClass()))){
             return false;
         } else {
             Board q = (Board) y;
