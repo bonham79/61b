@@ -49,7 +49,7 @@ public class QuickSort {
             Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
         while (!unsorted.isEmpty()) {
             Item item = unsorted.dequeue();
-            if (item.equals(pivot)) {
+            if (item.compareTo(pivot) == 0) {
                 equal.enqueue(item);
             } else if (item.compareTo(pivot) < 0) {
                 less.enqueue(item);
@@ -70,12 +70,14 @@ public class QuickSort {
             less = new Queue<>();
             equal = new Queue<>();
             greater = new Queue<>();
+
             for (Item i : items) {
                 copy.enqueue(i);
             }
+
             partition(copy, getRandomItem(copy), less, equal, greater);
-            quickSort(less);
-            quickSort(greater);
+            less = quickSort(less);
+            greater = quickSort(greater);
             while (!less.isEmpty()) {
                 copy.enqueue(less.dequeue());
             }
