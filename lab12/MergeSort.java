@@ -89,11 +89,11 @@ public class MergeSort {
 
     public static void main(String[] args) {
         Queue test = new Queue();
-        test.enqueue("mary");
-        test.enqueue("joseph");
-        test.enqueue("bobby");
+        test.enqueue("man");
+        test.enqueue("may");
+        test.enqueue("better");
         test.enqueue("a");
-        test.enqueue("hoseasdf");
+        test.enqueue("try");
         System.out.println(test.toString() + "\n");
 
         Queue sorted = MergeSort.mergeSort(test);
