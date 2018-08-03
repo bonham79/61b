@@ -1,6 +1,7 @@
-import javax.swing.text.html.HTMLDocument;
+
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Random;
+
 
 /**
  * Class for doing Radix sort
@@ -27,10 +28,7 @@ public class RadixSort {
            max = max < ascii.length() ? ascii.length() : max;
        }
 
-       String[] newAsccis = new String[asciis.length];
-       for (int i = 0; i < newAsccis.length; ++i) {
-           newAsccis[i] = asciis[i];
-       }
+       String[] newAsccis = Arrays.copyOf(asciis, asciis.length);
 
        for (int i = 0; i < max; ++i) {
            newAsccis = sortHelperLSD(newAsccis, max - i - 1);
@@ -80,13 +78,17 @@ public class RadixSort {
         return temp;
     }
 
-    public static void main (String[] args) {
-        String[] stuff = new String[3];
-        stuff[0] = "b";
-        stuff[1] = "aac";
-        stuff[2] = "dc";
+    /*public static void main (String[] args) {
+        String[] stuff = new String[10];
+        Random rand = new Random();
+        for (int i = 0; i < stuff.length; ++i) {
+            stuff[i] = Character.toString((char) (rand.nextInt(122 - 97 + 1) + 97));
+        }
+        stuff[9] = "";
+        stuff[8] = "ab";
+
         String[] now = sort(stuff);
-    }
+    }*/
 
     /**
      * MSD radix sort helper function that recursively calls itself to achieve the sorted array.
