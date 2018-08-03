@@ -1,3 +1,7 @@
+import javax.swing.text.html.HTMLDocument;
+import java.util.Arrays;
+import java.util.Iterator;
+
 /**
  * Class for doing Radix sort
  *
@@ -15,9 +19,24 @@ public class RadixSort {
      *
      * @return String[] the sorted array
      */
+
     public static String[] sort(String[] asciis) {
         // TODO: Implement LSD Sort
-        return null;
+        int max = 0;
+       for (String ascii : asciis) {
+           max = max < ascii.length() ? ascii.length() : max;
+       }
+
+       String[] newAsccis = new String[asciis.length];
+       for (int i = 0; i < newAsccis.length; ++i) {
+           newAsccis[i] = asciis[i];
+       }
+
+       for (int i = 0; i < max; ++i) {
+           newAsccis = sortHelperLSD(newAsccis, max - i - 1);
+           //going in reverse to assit helper function
+       }
+       return newAsccis;
     }
 
     /**
@@ -26,9 +45,47 @@ public class RadixSort {
      * @param asciis Input array of Strings
      * @param index The position to sort the Strings on.
      */
-    private static void sortHelperLSD(String[] asciis, int index) {
-        // Optional LSD helper method for required LSD radix sort
-        return;
+    private static String[] sortHelperLSD(String[] asciis, int index) {
+        int[] counts = new int[256];
+        int value;
+
+        for (String ascii : asciis) {
+            if (index > ascii.length() - 1) {
+                value = 0;
+            } else {
+                value = (int) ascii.charAt(index);
+            }
+            ++counts[value];
+        }
+
+        //assigns start positions
+        int next;
+        int now = 0;
+        for (int i = 0; i < counts.length; ++i) {
+            next = now + counts[i];
+            counts[i] = now;
+            now = next;
+        }
+
+        String[] temp = new String[asciis.length];
+        for (String ascii : asciis) {
+            if (index > ascii.length() - 1) {
+                temp[counts[0]] = ascii;
+                ++counts[0];
+            } else {
+                temp[counts[(int) ascii.charAt(index)]] = ascii;
+                ++counts[(int) ascii.charAt(index)];
+            }
+        }
+        return temp;
+    }
+
+    public static void main (String[] args) {
+        String[] stuff = new String[3];
+        stuff[0] = "b";
+        stuff[1] = "aac";
+        stuff[2] = "dc";
+        String[] now = sort(stuff);
     }
 
     /**
