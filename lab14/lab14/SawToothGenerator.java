@@ -17,7 +17,7 @@ public class SawToothGenerator implements Generator {
     }
 
     private double normalize(double value) {
-        return  ( value % this.period) * 2 / this.period;
+        return  ((value % this.period) * 2 / this.period) - 1.0;
     }
 
 }
