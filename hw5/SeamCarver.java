@@ -4,22 +4,10 @@ import java.awt.*;
 public class SeamCarver {
     private Picture picture;
     private int width, height;
-    private double[][] indivEnergies;
-
     public SeamCarver(Picture picture) {
         this.picture = new Picture (picture);
         this.width = picture.width();
         this.height = picture.height();
-        assignEnergies();
-    }
-
-    private void assignEnergies() {
-        this.indivEnergies = new double[height][width];
-        for (int i = 0; i < this.height; ++i) {
-            for (int j = 0; j < this.width; ++j) {
-                indivEnergies[i][j] = energy(j, i); //switched because rows are matrix algebra and energy is cartesian
-            }
-        }
     }
 
     public Picture picture() {return new Picture(picture);}                      // current picture
@@ -107,14 +95,14 @@ public class SeamCarver {
 
         for (int i = 0; i < width; ++i) {
             paths[0][i] = i; //marks origin
-            energies[0][i] = indivEnergies[0][i]; //energy at position
+            energies[0][i] = energy(i, 0); //energy at position
         }
 
         for (int j = 1; j < height; ++j) {
             for (int i = 0; i < width; ++i) {
                 minIndex = vertMin(i, j, energies);
                 paths[j][i] = minIndex; //since, we only need to know the x position.
-                energies[j][i] = energies[j - 1][minIndex] + indivEnergies[j][i]; //total + extra energy;
+                energies[j][i] = energies[j - 1][minIndex] + energy(i, j); //total + extra energy;
             }
         }
 
@@ -183,25 +171,15 @@ public class SeamCarver {
             }
         }
         SeamRemover sr = new SeamRemover();
-        this.picture = new Picture(sr.removeHorizontalSeam(this.picture, seam));
+        this.picture = sr.removeHorizontalSeam(this.picture, seam);
         this.height = this.picture.height();
         this.width = this.picture.width();
-        assignEnergies();
     }  // remove horizontal seam from picture
 
     public    void removeVerticalSeam(int[] seam) {
-        if (seam.length != this.width) {
-            throw new IllegalArgumentException();
-        }
-        for (int i = 0; i < seam.length - 1; ++i) {
-            if (Math.abs(seam[i] - seam[i + 1]) > 1) {
-                throw new IllegalArgumentException();
-            }
-        }
         SeamRemover sr = new SeamRemover();
         this.picture = new Picture(sr.removeVerticalSeam(this.picture, seam));
         this.height = this.picture.height();
         this.width = this.picture.width();
-        assignEnergies();
     }    // remove vertical seam from picture
 }
