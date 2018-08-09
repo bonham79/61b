@@ -170,7 +170,7 @@ public class SeamCarver {
             }
         }
         SeamRemover sr = new SeamRemover();
-        this.picture = new Picture(sr.removeHorizontalSeam(this.picture, seam));
+        this.picture = sr.removeHorizontalSeam(this.picture, seam);
         this.height = this.picture.height();
         this.width = this.picture.width();
     }  // remove horizontal seam from picture
@@ -185,7 +185,7 @@ public class SeamCarver {
             }
         }
         SeamRemover sr = new SeamRemover();
-        this.picture = new Picture(sr.removeVerticalSeam(this.picture, seam));
+        this.picture = sr.removeVerticalSeam(this.picture, seam);
         this.height = this.picture.height();
         this.width = this.picture.width();
     }    // remove vertical seam from picture
