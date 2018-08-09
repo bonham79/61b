@@ -10,7 +10,7 @@ public class SeamCarver {
         this.height = picture.height();
     }
 
-    public Picture picture() {return new Picture(picture);}                      // current picture
+    public Picture picture() {return new Picture(picture);}        // current picture
     public     int width()   {return width;}                      // width of current picture
     public     int height()  {return height;}                      // height of current picture
 
@@ -106,12 +106,11 @@ public class SeamCarver {
             }
         }
 
-        minIndex = findMinIndex(energies[height - 1]);
-        int step = minIndex;
+        minIndex = findMinIndex(energies[height - 1]); //lowest total energy is among bottom row
         int[] steps = new int[height];
         for (int i = height - 1; i >= 0; --i) {
-            steps[i] = step;
-            step = paths[i][step];
+            steps[i] = minIndex;
+            minIndex = paths[i][minIndex];
         }
 
         return steps;
@@ -122,15 +121,15 @@ public class SeamCarver {
         center = energyArray[yyPos - 1][xxPos];
         if (xxPos == 0) {
             right = energyArray[yyPos - 1][xxPos + 1];
-            if (center > right) {
+            if (center >= right) {
                 return xxPos + 1;
             } else {
                 return xxPos;
             }
         } else if (xxPos == energyArray[0].length - 1) {
             left = energyArray[yyPos - 1][xxPos - 1];
-            if (center > left) {
-                return xxPos -1;
+            if (center >= left) {
+                return xxPos - 1;
             } else {
                 return xxPos;
             }
@@ -138,9 +137,9 @@ public class SeamCarver {
             right = energyArray[yyPos - 1][xxPos + 1];
             left = energyArray[yyPos - 1][xxPos - 1];
 
-            if ((left < right) && (left < center)) {
+            if ((left <= right) && (left <= center)) {
                 return xxPos - 1;
-            } else if ((right < left) && (right < center)){
+            } else if ((right <= left) && (right <= center)){
                 return xxPos + 1;
             }  else {
                 return xxPos;
@@ -171,12 +170,20 @@ public class SeamCarver {
             }
         }
         SeamRemover sr = new SeamRemover();
-        this.picture = sr.removeHorizontalSeam(this.picture, seam);
+        this.picture = new Picture(sr.removeHorizontalSeam(this.picture, seam));
         this.height = this.picture.height();
         this.width = this.picture.width();
     }  // remove horizontal seam from picture
 
     public    void removeVerticalSeam(int[] seam) {
+        if (seam.length != this.width) {
+            throw new IllegalArgumentException();
+        }
+        for (int i = 0; i < seam.length - 1; ++i) {
+            if (Math.abs(seam[i] - seam[i + 1]) > 1) {
+                throw new IllegalArgumentException();
+            }
+        }
         SeamRemover sr = new SeamRemover();
         this.picture = new Picture(sr.removeVerticalSeam(this.picture, seam));
         this.height = this.picture.height();
