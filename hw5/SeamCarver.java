@@ -121,14 +121,14 @@ public class SeamCarver {
         center = energyArray[yyPos - 1][xxPos];
         if (xxPos == 0) {
             right = energyArray[yyPos - 1][xxPos + 1];
-            if (center >= right) {
+            if (center > right) {
                 return xxPos + 1;
             } else {
                 return xxPos;
             }
         } else if (xxPos == energyArray[0].length - 1) {
             left = energyArray[yyPos - 1][xxPos - 1];
-            if (center >= left) {
+            if (center > left) {
                 return xxPos - 1;
             } else {
                 return xxPos;
@@ -137,9 +137,9 @@ public class SeamCarver {
             right = energyArray[yyPos - 1][xxPos + 1];
             left = energyArray[yyPos - 1][xxPos - 1];
 
-            if ((left <= right) && (left <= center)) {
+            if ((left < right) && (left < center)) {
                 return xxPos - 1;
-            } else if ((right <= left) && (right <= center)){
+            } else if ((right < left) && (right < center)){
                 return xxPos + 1;
             }  else {
                 return xxPos;
