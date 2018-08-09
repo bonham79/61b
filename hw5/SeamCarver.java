@@ -5,7 +5,7 @@ public class SeamCarver {
     private Picture picture;
     private int width, height;
     public SeamCarver(Picture picture) {
-        this.picture = picture;
+        this.picture = new Picture (picture);
         this.width = picture.width();
         this.height = picture.height();
     }
@@ -178,7 +178,7 @@ public class SeamCarver {
 
     public    void removeVerticalSeam(int[] seam) {
         SeamRemover sr = new SeamRemover();
-        this.picture = sr.removeVerticalSeam(this.picture, seam);
+        this.picture = new Picture(sr.removeVerticalSeam(this.picture, seam));
         this.height = this.picture.height();
         this.width = this.picture.width();
     }    // remove vertical seam from picture
