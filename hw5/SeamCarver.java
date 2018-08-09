@@ -10,7 +10,7 @@ public class SeamCarver {
         this.height = picture.height();
     }
 
-    public Picture picture() {return picture;}                      // current picture
+    public Picture picture() {return new Picture(picture);}                      // current picture
     public     int width()   {return width;}                      // width of current picture
     public     int height()  {return height;}                      // height of current picture
 
@@ -20,7 +20,7 @@ public class SeamCarver {
             throw new IndexOutOfBoundsException();
         }
         Color left, right, top, bottom;
-        int xxR, xxG, xxB, yyR, yyG, yyB;
+        double xxR, xxG, xxB, yyR, yyG, yyB;
 
         if (x == 0) { //Check if x is at left boundary.
             left = picture.get(width - 1, y);
