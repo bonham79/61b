@@ -66,8 +66,35 @@ public class SeamCarver {
 
 
     public   int[] findHorizontalSeam() {
+
+        //"Correct" way of doing seam to avoid redundancy.  Actually quicker to implement vertical seam backwards.
+        //However, easier for debugging.  Will temporarily leave in for autograder.
+        //Saving originals.
+
+        Picture realPicture = this.picture;
+        int realHeight = this.height;
+        int realWidth = this.width;
+
+        this.picture = new Picture(realHeight, realWidth);
+        this.height = realWidth;
+        this.width = realHeight;
+
+
+        for (int i = 0; i < picture.width(); ++i) {
+            for (int j = 0; j < picture.height(); ++j) {
+                picture.set(i, j, realPicture.get(j, i));
+            }
+        }
+
+        int[] seam = findVerticalSeam();
+        this.picture = realPicture;
+        this.height = realHeight;
+        this.width = realWidth;
+        return seam;
+        /*
         int[][] paths = new int[width][height];
         double[][] energies = new double[width][height];
+        int[] steps = new int[width];
         int minIndex;
 
         for (int i = 0; i < height; ++i) {
@@ -87,19 +114,20 @@ public class SeamCarver {
 
         minIndex = findMinIndex(energies[width - 1]);
         int step = minIndex;
-        int[] steps = new int[width];
         for (int i = width - 1; i >= 0; --i) {
             steps[i] = step;
             step = paths[i][step];
         }
 
         return steps;
+        */
     }
 
     public   int[] findVerticalSeam() {
         // sequence of indices for vertical seam
         int[][] paths = new int[height][width];
         double[][] energies = new double[height][width];
+        int[] steps = new int[height];
         int minIndex;
 
         for (int i = 0; i < width; ++i) {
@@ -116,7 +144,6 @@ public class SeamCarver {
         }
 
         minIndex = findMinIndex(energies[height - 1]); //lowest total energy is among bottom row
-        int[] steps = new int[height];
         for (int i = height - 1; i >= 0; --i) {
             steps[i] = minIndex;
             minIndex = paths[i][minIndex];
@@ -147,39 +174,6 @@ public class SeamCarver {
             return xxPos + 1;
         }
         return xxPos;
-
-
-
-
-/*
-        double left, center, right;
-        center = energyArray[yyPos - 1][xxPos];
-        if (xxPos == 0) {
-            right = energyArray[yyPos - 1][xxPos + 1];
-            if (center > right) {
-                return xxPos + 1;
-            } else {
-                return xxPos;
-            }
-        } else if (xxPos == energyArray[0].length - 1) {
-            left = energyArray[yyPos - 1][xxPos - 1];
-            if (center > left) {
-                return xxPos - 1;
-            } else {
-                return xxPos;
-            }
-        } else {
-            right = energyArray[yyPos - 1][xxPos + 1];
-            left = energyArray[yyPos - 1][xxPos - 1];
-
-            if ((left < right) && (left < center)) {
-                return xxPos - 1;
-            } else if ((right < left) && (right < center)){
-                return xxPos + 1;
-            }  else {
-                return xxPos;
-            }
-        }*/
     }
 
     private int findMinIndex(double[] array) {
