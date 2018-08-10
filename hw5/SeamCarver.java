@@ -191,7 +191,7 @@ public class SeamCarver {
 
     public    void removeHorizontalSeam(int[] seam) {
         if (seam.length != this.width) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Seam is not ");
         }
         for (int i = 0; i < seam.length - 1; ++i) {
             if (((seam[i] - seam[i + 1]) > 1) || ((seam[i] - seam[i + 1]) < -1)) {
@@ -205,7 +205,7 @@ public class SeamCarver {
     }  // remove horizontal seam from picture
 
     public    void removeVerticalSeam(int[] seam) {
-        if (seam.length != this.width) {
+        if (seam.length != this.height) {
             throw new IllegalArgumentException();
         }
         for (int i = 0; i < seam.length - 1; ++i) {
