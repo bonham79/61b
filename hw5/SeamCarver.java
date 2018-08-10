@@ -126,6 +126,32 @@ public class SeamCarver {
     }
 
     private int vertMin(int xxPos, int yyPos, double[][] energyArray) {
+        //Assign obvious false values for min funciton.
+        double left = Double.MAX_VALUE;
+        double right = Double.MAX_VALUE;
+
+        //Assign values for valid positions.
+        double center = energyArray[yyPos - 1][xxPos];
+        if (xxPos > 0) {
+            left = energyArray[yyPos - 1][xxPos - 1];
+        }
+        if (xxPos < energyArray[0].length - 1) {
+            right = energyArray[yyPos - 1][xxPos + 1];
+        }
+
+        double min = Math.min(center, Math.min(left, right));
+        if (left == min) {
+            return xxPos - 1;
+        }
+        if (right == min) {
+            return xxPos + 1;
+        }
+        return xxPos;
+
+
+
+
+/*
         double left, center, right;
         center = energyArray[yyPos - 1][xxPos];
         if (xxPos == 0) {
@@ -153,7 +179,7 @@ public class SeamCarver {
             }  else {
                 return xxPos;
             }
-        }
+        }*/
     }
 
     private int findMinIndex(double[] array) {
@@ -174,7 +200,7 @@ public class SeamCarver {
             throw new IllegalArgumentException();
         }
         for (int i = 0; i < seam.length - 1; ++i) {
-            if (Math.abs(seam[i] - seam[i + 1]) > 1) {
+            if (((seam[i] - seam[i + 1]) > 1) || ((seam[i] - seam[i + 1]) < -1)) {
                 throw new IllegalArgumentException();
             }
         }
@@ -189,7 +215,7 @@ public class SeamCarver {
             throw new IllegalArgumentException();
         }
         for (int i = 0; i < seam.length - 1; ++i) {
-            if (Math.abs(seam[i] - seam[i + 1]) > 1) {
+            if (((seam[i] - seam[i + 1]) > 1) || ((seam[i] - seam[i + 1]) < -1)) {
                 throw new IllegalArgumentException();
             }
         }
