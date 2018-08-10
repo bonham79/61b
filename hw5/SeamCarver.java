@@ -4,11 +4,13 @@ import java.awt.*;
 public class SeamCarver {
     private Picture picture;
     private int width, height;
+
     public SeamCarver(Picture picture) {
         this.picture = new Picture (picture);
         this.width = picture.width();
         this.height = picture.height();
     }
+
 
     public Picture picture() {return new Picture(picture);}        // current picture
     public     int width()   {return width;}                      // width of current picture
@@ -44,17 +46,22 @@ public class SeamCarver {
         }
 
         //Calculated distances.
-        xxR = Math.abs(left.getRed() - right.getRed());
-        xxB = Math.abs(left.getBlue() - right.getBlue());
-        xxG = Math.abs(left.getGreen() - right.getGreen());
+        xxR = left.getRed() - right.getRed();
+        xxR *= xxR; //Since we're squaring signs do not matter.
+        xxB = left.getBlue() - right.getBlue();
+        xxB *= xxB;
+        xxG = left.getGreen() - right.getGreen();
+        xxG *= xxG;
 
-        yyR = Math.abs(top.getRed() - bottom.getRed());
-        yyB = Math.abs(top.getBlue() - bottom.getBlue());
-        yyG = Math.abs(top.getGreen() - bottom.getGreen());
+        yyR = top.getRed() - bottom.getRed();
+        yyR *= yyR;
+        yyB = top.getBlue() - bottom.getBlue();
+        yyB *= yyB;
+        yyG = top.getGreen() - bottom.getGreen();
+        yyG *= yyG;
 
         //Expanded energy equation.
-        return xxR * xxR + xxB * xxB + xxG * xxG
-                + yyR * yyR + yyB * yyB + yyG * yyG;
+        return xxR + xxB + xxG + yyR + yyB + yyG;
     }
 
 
@@ -65,14 +72,16 @@ public class SeamCarver {
 
         for (int i = 0; i < height; ++i) {
             paths[0][i] = i; //marks origin
-            energies[0][i] = energy(0, i); //energy at position
+            energies[0][i] = //indivEnergies[i][0];
+                energy(0, i); //energy at position
         }
 
         for (int j = 1; j < width; ++j) {
             for (int i = 0; i < height; ++i) {
                 minIndex = vertMin(i, j, energies);
                 paths[j][i] = minIndex; //since, we only need to know the x position.
-                energies[j][i] = energies[j - 1][minIndex] + energy(j, i); //total + extra energy;
+                energies[j][i] = energies[j - 1][minIndex] + //indivEnergies[i][j];//
+                energy(j, i); //total + extra energy;
             }
         }
 
@@ -95,14 +104,14 @@ public class SeamCarver {
 
         for (int i = 0; i < width; ++i) {
             paths[0][i] = i; //marks origin
-            energies[0][i] = energy(i, 0); //energy at position
+            energies[0][i] = energy(i, 0); //indivEnergies[0][i]; //energy at position
         }
 
         for (int j = 1; j < height; ++j) {
             for (int i = 0; i < width; ++i) {
                 minIndex = vertMin(i, j, energies);
                 paths[j][i] = minIndex; //since, we only need to know the x position.
-                energies[j][i] = energies[j - 1][minIndex] + energy(i, j); //total + extra energy;
+                energies[j][i] = energies[j - 1][minIndex] + energy(i, j);//indivEnergies[j][i];//energy(i, j); //total + extra energy;
             }
         }
 
